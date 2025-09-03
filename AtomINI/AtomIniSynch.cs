@@ -5,20 +5,21 @@ using Serilog;
 namespace AtomINI {
     
     public class AtomIniSynch {
-        private AtomIniMutex atomutex = new AtomIniMutex();
+        private readonly AtomIniMutex atomutex = new AtomIniMutex();
 
         public void Block(string iniFileName) {
             atomutex.CheckForWaitMutex(iniFileName);
         }
         
         public void Release(string iniFileName) {
-            atomutex.CheckForWaitMutex(iniFileName);
+            atomutex.CheckForReleaseMutex(iniFileName);
         }
     }
 
     public class AtomIniMutex {
         
         Mutex mutex = null;
+        bool isMutexAcquired = false;
 
         public bool CheckForWaitMutex(string iniFileName) {
             try {
@@ -29,6 +30,7 @@ namespace AtomINI {
                 mutex = new Mutex(false, AtomIniSettings.MUTEX_NAME);
                 AtomIniUtils.ExtVLog("Waiting for mutex availability for file {iniFileName}", iniFileName);
                 mutex.WaitOne();
+                isMutexAcquired = true;
                 AtomIniUtils.ExtVLog("Acquired mutex for file {iniFileName}", iniFileName);
                 return true;
             } catch (Exception e) {
@@ -43,7 +45,7 @@ namespace AtomINI {
         public void CheckForReleaseMutex(string iniFileName) {
             try {
                 if (!AtomIniSettings.useMutex) return;
-                if (mutex != null) {
+                if (mutex != null && isMutexAcquired) {
                     AtomIniUtils.ExtVLog("Releasing mutex for file {iniFileName}", iniFileName);
                     mutex.ReleaseMutex();
                     AtomIniUtils.ExtVLog("Mutex released!", iniFileName);

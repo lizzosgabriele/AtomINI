@@ -11,6 +11,8 @@ namespace AtomINI {
         
         public static string GenSectionName(string iniFileName, string section, bool smartSectionEnabled) {
             
+            // TODO: aggiungere gestione sezione duplicata
+            
             if (!smartSectionEnabled || AtomIniSettings.alwaysDisableSmartSection) {
                 return section;
             }

@@ -77,6 +77,7 @@
     <ItemGroup>
         <Compile Include="AtomIni.cs" />
         <Compile Include="AtomIniConverter.cs" />
+        <Compile Include="AtomIniData.cs" />
         <Compile Include="AtomIniSections.cs" />
         <Compile Include="AtomIniSettings.cs" />
         <Compile Include="AtomIniSynch.cs" />

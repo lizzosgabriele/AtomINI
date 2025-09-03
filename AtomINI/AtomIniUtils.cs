@@ -40,7 +40,7 @@ namespace AtomINI {
         /**
          * Restituisce encoding attivo in base al flag enableUnicode della libreria.
          */
-        private static Encoding getActiveEncoding() { return AtomIniSettings.enableUnicode ? Encoding.UTF8 : Encoding.ASCII; }
+        public static Encoding getActiveEncoding() { return AtomIniSettings.enableUnicode ? Encoding.UTF8 : Encoding.ASCII; }
         
         /**
          * Controlla l'esistenza del file ini specificato dal path.
