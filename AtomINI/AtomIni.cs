@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace AtomINI {
     public class AtomIni {
@@ -38,7 +39,7 @@ namespace AtomINI {
                 synch.Block(iniFileName);
 
                 // Scrivo il valore e prendo il risultato
-                AtomIniData.Write(iniFileName, sectionName, keyName, stringValue);
+                AtomIniData.WriteValue(iniFileName, sectionName, keyName, stringValue);
                 
                 return true;
             } catch (Exception e) {
@@ -50,6 +51,19 @@ namespace AtomINI {
             }
         }
 
+        public static bool DeleteSection(string filePath, string Section) {
+            if (!File.Exists(filePath) || string.IsNullOrWhiteSpace(Section)) { return false; }
+            AtomIniSynch synch = new AtomIniSynch();
+            try {
+                synch.Block(filePath);
+                return AtomIniData.DeleteSection(filePath, Section);
+            }catch (Exception e) {
+                AtomIniUtils.ELog(e.Message);
+                return false;
+            }finally {
+                synch.Release(filePath);
+            }
+        }
 
         public static List<string> ReadSections(string iniFilePath) {
             return new List<string>();

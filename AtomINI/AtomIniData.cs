@@ -53,13 +53,31 @@ namespace AtomINI {
 
     public static class AtomIniData {
         
-        public static void Write(string iniFileName, string section, string valueName, string value) {
-            CachedIniData cachedData = CacheManager.Get(iniFileName);
+        private static CachedIniData GetCachedData(string iniFilePath) {
+            CachedIniData cachedData = CacheManager.Get(iniFilePath);
             if (cachedData == null) {
-                throw new ArgumentNullException("An error occurred while accessing the cached data for ini file " + iniFileName);
+                throw new ArgumentNullException("An error occurred while accessing the cached data for ini file " + iniFilePath);
             }
+            return cachedData;
+        }
+        
+        public static void WriteValue(string iniFilePath, string section, string valueName, string value) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
             cachedData.data[section][valueName] = value;
-            CacheManager.UpdateFile(iniFileName);
+            CacheManager.UpdateFile(iniFilePath);
+        }
+
+        public static bool DeleteSection(string iniFilePath, string section) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            if (cachedData.data.Sections.ContainsSection(section)) {
+                AtomIniUtils.ExtDLog("AtomINI: ## Called DeleteSection with section {Section} in file {filePath}", section, iniFilePath);
+                cachedData.data.Sections.RemoveSection(section);
+                CacheManager.UpdateFile(iniFilePath);
+                return true;
+            } else {
+                AtomIniUtils.ExtDLog("AtomINI: ## Called DeleteSection with section {Section} in file {filePath}, but section does not exist.", section, iniFilePath);
+                return false;
+            }
         }
 
         public static string Read(string iniFileName, string section, string valueName, string defaultValue) {

@@ -84,6 +84,12 @@ namespace AtomINI {
         public static string[] smartSectionFileBlackList = {
             "C:\\ProgramData\\ATOM\\DxfConverter\\dxf2die.ini"
         };
+        
+        /**
+         * Nome dell'applicazione eseguibile che sta usando la libreria.
+         * Usato per i log.
+         */
+        public static string iniExeAppName = "Unknown";
 
     }
     
