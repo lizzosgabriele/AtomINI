@@ -7,13 +7,19 @@ namespace AtomINI {
     
     public class AtomIniUtils {
         
+        
+        public static void ILog(string message, params object[] args) {
+            Log.Information("AtomINI: " + message, args);
+            if(AtomIniSettings.enableTestLogsOnDesktop) { /*AtomTestLog.LogToDesktop(message);*/}
+        }
+        
         /**
          * Metodo per il logging di messaggi di Debug estesi.
          * Vengono loggati solo se il flag enableExtLogging è attivo.
          * Se il flag enableTestLogsOnDesktop è attivo, i messaggi vengono loggati anche su un file di testo sul desktop.
          */
         public static void ExtDLog(string message, params object[] args) {
-            /*if(AtomIniSettings.enableExtLogging)*/ Log.Debug("AtomINI: " + message, args);
+            if (AtomIniSettings.enableExtLogging) Log.Debug("AtomINI: " + message, args);
             if(AtomIniSettings.enableTestLogsOnDesktop) { /*AtomTestLog.LogToDesktop(message);*/}
         }
         

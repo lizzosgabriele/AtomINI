@@ -1,3 +1,4 @@
+using System;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -34,10 +35,13 @@ namespace AtomINI {
                 //AtomIni.SetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
             }
             
-            for (int i = 0; i < 500; i++) {
+            for (int i = 0; i < 2000; i++) {
                 string testValue = AtomIni.GetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
+                //Console.WriteLine(testValue);
             }
             
+
+            //AtomIni.DeleteSection(iniFilePath, "Software\\String\\Nesting System\\InteractiveLay");
             
             Log.Information("FINISHED");
             

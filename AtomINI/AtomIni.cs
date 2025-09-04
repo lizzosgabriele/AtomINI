@@ -1,10 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
 
 namespace AtomINI {
     public class AtomIni {
+
+        private static (string SectionName, string stringValue) PrepareIniReadWrite<T>(
+            string iniFileName, 
+            string section, 
+            string key, 
+            T value,
+            string methodName, 
+            bool enableSmartSection = true
+        ) {
+            
+            AtomIniUtils.ILog("## Called {methodName} with key {key} and value {value} with section {section} in file {iniFileName}", methodName, key, value, section, iniFileName);
+            
+            // Controllo se è stato passato un file ini valido
+            if (string.IsNullOrEmpty(iniFileName)) {
+                AtomIniUtils.ELog("SetValue: iniFileName is null or empty. This SetValue call will be ignored.");
+                throw new ArgumentException("iniFileName is null or empty");
+            }
+            
+            // Controllo se il file esiste, altrimenti lo creo
+            AtomIniUtils.CheckFileExistence(iniFileName);
+            
+            // Controllo encoding del file ini
+            // TODO: Implementare controllo encoding
+
+            // Genero il nome della sezione dinamicamente
+            // TODO: Aggiungere gestione sezione duplicata
+            AtomIniUtils.ExtVLog($"Generating section name for section {section} with key {key}", section, key);
+            string sectionName = AtomIniSections.GenSectionName(iniFileName, section, enableSmartSection);
+            AtomIniUtils.ExtVLog("Generated section name: {sectionName}", sectionName);
+            
+            // Converto il valore in stringa
+            string stringValue = AtomIniConverter.ConvertToString(value);
+            
+            return (sectionName, stringValue);
+            
+        }
 
         public static bool SetValue<T>(string iniFileName, string keyName, string valueName, T value, bool enableSmartSection = true) {
             
@@ -12,29 +47,8 @@ namespace AtomINI {
             AtomIniSynch synch = new AtomIniSynch();
 
             try {
-
-                AtomIniUtils.ExtDLog("## Called SetValue with key {valueName} and value {value} with section {keyName} in file {iniFileName}", value, valueName, keyName, iniFileName);
-
-                // Controllo se è stato passato un file ini valido
-                if (string.IsNullOrEmpty(iniFileName)) {
-                    AtomIniUtils.ELog("SetValue: iniFileName is null or empty. This SetValue call will be ignored.");
-                    return false;
-                }
-
-                // Controllo se il file esiste, altrimenti lo creo
-                AtomIniUtils.CheckFileExistence(iniFileName);
-
-                // Controllo encoding del file ini
-                // TODO: Implementare controllo encoding
-
-                // Genero il nome della sezione dinamicamente
-                // TODO: Aggiungere gestione sezione duplicata
-                AtomIniUtils.ExtVLog("Generating section name for key {keyName} with value {valueName}", keyName, valueName);
-                string sectionName = AtomIniSections.GenSectionName(iniFileName, keyName, enableSmartSection);
-                AtomIniUtils.ExtVLog("Generated section name: {sectionName}", sectionName);
-
-                // Converto il valore in stringa
-                string stringValue = AtomIniConverter.ConvertToString(value);
+                
+                var (sectionName, stringValue) = PrepareIniReadWrite(iniFileName, keyName, valueName, value, "SetValue", enableSmartSection);
 
                 // Inizio il blocco di sincronizzazione
                 synch.Block(iniFileName);
@@ -62,36 +76,15 @@ namespace AtomINI {
 
             try {
                 
-                AtomIniUtils.ExtDLog("## Called GetValue with key {valueName} and section {keyName} in file {iniFileName}", valueName, keyName, iniFileName);
-
-                // Controllo se è stato passato un file ini valido
-                if (string.IsNullOrEmpty(iniFileName)) {
-                    AtomIniUtils.ELog("GetValue: iniFileName is null or empty. This GetValue call will be ignored.");
-                    return defaultValue;
-                }
-                
-                // Controllo se il file esiste, altrimenti lo creo
-                AtomIniUtils.CheckFileExistence(iniFileName);
-
-                // Controllo encoding del file ini
-                // TODO: Implementare controllo encoding
-                
-                // Genero il nome della sezione dinamicamente
-                // TODO: Aggiungere gestione sezione duplicata
-                AtomIniUtils.ExtVLog("Generating section name for key {keyName} with value {valueName}", keyName, valueName);
-                string sectionName = AtomIniSections.GenSectionName(iniFileName, keyName, enableSmartSection);
-                AtomIniUtils.ExtVLog("Generated section name: {sectionName}", sectionName);
+                var (sectionName, stringDefaultValue) = PrepareIniReadWrite(iniFileName, keyName, valueName, defaultValue, "GetValue", enableSmartSection);
                 
                 // Inizio il blocco di sincronizzazione
                 synch.Block(iniFileName);
                 
-                // Converto il valore in stringa
-                string stringDefaultValue = AtomIniConverter.ConvertToString(defaultValue);
-                
                 // Controllo se la sezione/chiave esiste, altrimenti la scrivo con il valore di default
                 AtomIniUtils.ExtVLog("Checking if section {sectionName} and key {valueName} exist in file {iniFileName}", sectionName, valueName, iniFileName);
                 if (!AtomIniData.SectionKeyPairExist(sectionName, valueName, iniFileName)) {
-                    AtomIniUtils.ExtDLog("AtomINI: Key {valueName} not found in section {sectionName}. Setting default value.", valueName, sectionName);
+                    AtomIniUtils.ExtDLog("Key {valueName} not found in section {sectionName}. Setting default value.", valueName, sectionName);
                     SetValue(iniFileName, sectionName, valueName, defaultValue);
                     return defaultValue;
                 }
