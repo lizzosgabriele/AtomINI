@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using IniParser;
 using IniParser.Model;
 
@@ -88,6 +89,41 @@ namespace AtomINI {
         public static bool SectionKeyPairExist(string section, string key, string iniFilePath) {
             CachedIniData cachedData = GetCachedData(iniFilePath);
             return cachedData.data.Sections.ContainsSection(section) && cachedData.data[section].ContainsKey(key);
+        }
+
+        public static bool DeleteKeyPair(string section, string key, string iniFilePath) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            if (SectionKeyPairExist(section, key, iniFilePath)) {
+                cachedData.data.Sections[section].RemoveKey(key);
+                CacheManager.UpdateFile(iniFilePath);
+                return true;
+            }
+            return false;
+        }
+        
+        public static List<string> GetAllSections(string iniFilePath) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            List<string> sections = new List<string>();
+            foreach (var section in cachedData.data.Sections) {
+                sections.Add(section.SectionName);
+            }
+            return sections;
+        }
+        
+        public static List<string> GetAllSectionKeys(string iniFilePath, string section) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            List<string> keys = new List<string>();
+            if (cachedData.data.Sections.ContainsSection(section)) {
+                foreach (var key in cachedData.data[section]) {
+                    keys.Add(key.KeyName);
+                }
+            }
+            return keys;
+        }
+        
+        public static Dictionary<string, string> GetSectionKeyValuePairs(string iniFilePath, string section) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            return cachedData.data[section].ToDictionary(key => key.KeyName, key => key.Value);
         }
 
     }

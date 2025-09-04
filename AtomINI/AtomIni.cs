@@ -120,13 +120,60 @@ namespace AtomINI {
                 synch.Release(filePath);
             }
         }
+        
+        public static bool KeyExist(string iniFilePath, string sectionName, string keyName) {
+            if (!File.Exists(iniFilePath) || string.IsNullOrWhiteSpace(sectionName) || string.IsNullOrWhiteSpace(keyName)) { return false; }
+            try {
+                return AtomIniData.SectionKeyPairExist(sectionName, keyName, iniFilePath);
+            }catch (Exception e) {
+                AtomIniUtils.ELog("An error occurred while checking key existence (" + keyName + ") inside file "+ iniFilePath +": " + e.Message);
+                return false;
+            }
+        }
+
+        public static bool DeleteKey(string iniFilePath, string sectionName, string keyName) {
+            if (!File.Exists(iniFilePath) || string.IsNullOrWhiteSpace(sectionName) || string.IsNullOrWhiteSpace(keyName)) { return false; }
+            try {
+                AtomIniUtils.ExtDLog("AtomINI: ## Called DeleteKey with key {keyName} in section {sectionName} in file {iniFilePath}", keyName, sectionName, iniFilePath);
+                return AtomIniData.DeleteKeyPair(sectionName, keyName, iniFilePath);
+            }catch (Exception e) {
+                AtomIniUtils.ELog("An error occurred while deleting key " + keyName + " inside section "+ sectionName + " on file "+ iniFilePath +": " + e.Message);
+                return false;
+            }
+        }
+        
+        public static bool HasSection(string fileName, string sectionName) {
+            List<string> sections = ReadSections(fileName);
+            return sections.Contains(sectionName);
+        }
 
         public static List<string> ReadSections(string iniFilePath) {
-            return new List<string>();
+            if (!File.Exists(iniFilePath)) { return new List<string>(); }
+            try {
+                return AtomIniData.GetAllSections(iniFilePath);
+            }catch (Exception e) {
+                AtomIniUtils.ELog("An error occurred while reading section names from file "+ iniFilePath +": " + e.Message);
+                return new List<string>();
+            }
         }
 
         public static List<string> ReadSectionKeys(string fileName, string sectionName) {
-            return new List<string>();
+            try {
+                AtomIniUtils.ExtDLog("AtomINI: ## Called ReadSectionKeys in file {fileName} with section {sectionName}", fileName, sectionName);
+                return AtomIniData.GetAllSectionKeys(fileName, sectionName);
+            } catch (Exception e) {
+                AtomIniUtils.ELog("An error occurred while reading section keys inside file "+ fileName +": " + e.Message);
+                return new List<string>();
+            }
+        }
+        
+        public static Dictionary<string, string> GetKeyValuePairs(string filename, string sectionName) {
+            try {
+                return AtomIniData.GetSectionKeyValuePairs(filename, sectionName);
+            }catch (Exception e) {
+                AtomIniUtils.ELog(e.Message);
+                return null;
+            }
         }
     }
 }
