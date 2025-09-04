@@ -13,7 +13,7 @@ namespace AtomINI {
          * Se il flag enableTestLogsOnDesktop è attivo, i messaggi vengono loggati anche su un file di testo sul desktop.
          */
         public static void ExtDLog(string message, params object[] args) {
-            if(AtomIniSettings.enableExtLogging) Log.Debug("AtomINI: " + message, args);
+            /*if(AtomIniSettings.enableExtLogging)*/ Log.Debug("AtomINI: " + message, args);
             if(AtomIniSettings.enableTestLogsOnDesktop) { /*AtomTestLog.LogToDesktop(message);*/}
         }
         

@@ -24,6 +24,24 @@ namespace AtomINI {
                 .CreateLogger();
             
             Log.Logger = log;
+            
+            
+            string iniFilePath = "C:\\ATOM\\Logs\\Test\\test.ini";
+            
+            AtomIniSettings.enableExtLogging = false;
+
+            for (int i = 0; i < 500; i++) {
+                //AtomIni.SetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
+            }
+            
+            for (int i = 0; i < 500; i++) {
+                string testValue = AtomIni.GetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
+            }
+            
+            
+            Log.Information("FINISHED");
+            
+            
         }
     }
 }

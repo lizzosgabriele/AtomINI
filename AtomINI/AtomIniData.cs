@@ -80,8 +80,14 @@ namespace AtomINI {
             }
         }
 
-        public static string Read(string iniFileName, string section, string valueName, string defaultValue) {
-            return ";";
+        public static string Read(string iniFilePath, string section, string valueName, string defaultValue) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            return cachedData.data[section][valueName];
+        }
+
+        public static bool SectionKeyPairExist(string section, string key, string iniFilePath) {
+            CachedIniData cachedData = GetCachedData(iniFilePath);
+            return cachedData.data.Sections.ContainsSection(section) && cachedData.data[section].ContainsKey(key);
         }
 
     }
