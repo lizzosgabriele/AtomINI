@@ -90,6 +90,12 @@ namespace AtomINI {
          * Usato per i log.
          */
         public static string iniExeAppName = "Unknown";
+        
+        /**
+         * Cartella di default per i file ini di ATOM.
+         * Usata per il fileSystemWatcher per il reload automatico dei file ini.
+         */
+        public static string atomIniDefaultFolder = "C:\\ProgramData\\ATOM\\Config";
 
     }
     
