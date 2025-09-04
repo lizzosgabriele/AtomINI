@@ -30,16 +30,18 @@ namespace AtomINI {
             string iniFilePath = "C:\\ATOM\\Logs\\Test\\test.ini";
             
             AtomIniSettings.enableExtLogging = false;
+            AtomIniSettings.useMutex = false;
 
-            for (int i = 0; i < 500; i++) {
-                //AtomIni.SetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
+            for (int i = 0; i < 100; i++) {
+                AtomIni.SetValue(iniFilePath, "InteractiveLay", "Spacer" + i, "TestValue" + i);
             }
             
+            /*
             for (int i = 0; i < 2000; i++) {
                 string testValue = AtomIni.GetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
                 //Console.WriteLine(testValue);
             }
-            
+            */
 
             //AtomIni.DeleteSection(iniFilePath, "Software\\String\\Nesting System\\InteractiveLay");
             

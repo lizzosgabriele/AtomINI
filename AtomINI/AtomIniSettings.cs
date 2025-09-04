@@ -21,7 +21,7 @@ namespace AtomINI {
         /**
          * Config da utilizzare per i parser della libreria parser-ini
          */
-        public static readonly IniDataParser config_parser = new IniDataParser(new IniParserConfiguration { CommentRegex = new Regex(regex), CaseInsensitive = true, SkipInvalidLines = true });
+        public static readonly IniDataParser config_parser = new IniDataParser(new IniParserConfiguration { AssigmentSpacer = "", CommentRegex = new Regex(regex), CaseInsensitive = true, SkipInvalidLines = true });
 
         /**
          * Flag per abilitare i log estesi (Debug/Verbose) all'interno della libreria.
