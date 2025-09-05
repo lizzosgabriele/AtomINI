@@ -95,7 +95,7 @@ namespace AtomINI {
          * Cartella di default per i file ini di ATOM.
          * Usata per il fileSystemWatcher per il reload automatico dei file ini.
          */
-        public static string atomIniDefaultFolder = "C:\\ProgramData\\ATOM\\Config";
+        public static string atomIniDefaultFolder = "C:\\ProgramData\\ATOM";
 
     }
     

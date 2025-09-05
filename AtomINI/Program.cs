@@ -27,21 +27,21 @@ namespace AtomINI {
             Log.Logger = log;
             
             
-            string iniFilePath = "C:\\ATOM\\Logs\\Test\\test.ini";
+            string iniFilePath = "C:\\ProgramData\\ATOM\\config\\Test\\test.ini";
             
             AtomIniSettings.enableExtLogging = false;
-            AtomIniSettings.useMutex = false;
+            AtomIniSettings.useMutex = true;
 
             for (int i = 0; i < 100; i++) {
-                AtomIni.SetValue(iniFilePath, "InteractiveLay", "Spacer" + i, "TestValue" + i);
+                //AtomIni.SetValue(iniFilePath, "InteractiveLay", "Spacer" + i, "TestValue" + i);
             }
             
-            /*
-            for (int i = 0; i < 2000; i++) {
+            
+            for (int i = 0; i < 500; i++) {
                 string testValue = AtomIni.GetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
-                //Console.WriteLine(testValue);
+                //Console.ReadLine();
             }
-            */
+            
 
             //AtomIni.DeleteSection(iniFilePath, "Software\\String\\Nesting System\\InteractiveLay");
             
