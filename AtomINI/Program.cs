@@ -28,6 +28,7 @@ namespace AtomINI {
             
             
             string iniFilePath = "C:\\ProgramData\\ATOM\\config\\Test\\test.ini";
+            string iniFilePath2 = "C:\\ATOM\\Calibrazione\\Telecamera\\test2.ini";
             
             AtomIniSettings.enableExtLogging = false;
             AtomIniSettings.useMutex = true;
@@ -36,9 +37,17 @@ namespace AtomINI {
                 //AtomIni.SetValue(iniFilePath, "InteractiveLay", "Spacer" + i, "TestValue" + i);
             }
             
+            AtomIni.SetValue(iniFilePath, "InteractiveLay", "Banana" , "TestValue");
             
-            for (int i = 0; i < 500; i++) {
+            
+            for (int i = 0; i < 5; i++) {
+                AtomIni.SetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "BananaValue" + i);
                 string testValue = AtomIni.GetValue(iniFilePath, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
+                //Console.ReadLine();
+            }
+            
+            for (int i = 0; i < 5; i++) {
+                //string testValue = AtomIni.GetValue(iniFilePath2, "InteractiveLay", "TestKeyTemp" + i, "TestValue" + i);
                 //Console.ReadLine();
             }
             

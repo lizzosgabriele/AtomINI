@@ -92,17 +92,27 @@ namespace AtomINI {
             string currentTimestamp = File.GetLastWriteTimeUtc(iniFilePath).ToString("o");
             return cache[iniFilePath].lastEditTimestamp != currentTimestamp;
         }
+        
+        private static bool IsInWatchedFolder(string iniFilePath) {
+            return iniFilePath.StartsWith(AtomIniSettings.atomIniDefaultFolder, StringComparison.OrdinalIgnoreCase);
+        }
 
         public static CachedIniData Get(string iniFilePath) {
             lock (cache) {
-                if (!cache.ContainsKey(iniFilePath)) {
-                    ReloadFile(iniFilePath);
+                if (IsInWatchedFolder(iniFilePath)) {
+                    if (!cache.ContainsKey(iniFilePath)) {
+                        ReloadFile(iniFilePath);
+                    }
+                } else {
+                    AtomIniUtils.ExtVLog("File ini {iniFilePath} is not in watched folder " + AtomIniSettings.atomIniDefaultFolder + ". Checking timestamp...", iniFilePath);
+                    if (NeedsToReload(iniFilePath)) {
+                        AtomIniUtils.ExtVLog("File ini {iniFilePath} needs to be reloaded.", iniFilePath);
+                        ReloadFile(iniFilePath);
+                    }
                 }
                 return cache[iniFilePath];
             }
         }
-        
-
     }
 
     public static class AtomIniData {
